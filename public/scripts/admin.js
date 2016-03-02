@@ -10,7 +10,6 @@ socket.on('usersConnected', function (count) {
 });
 
 socket.on('voteCount', function (votes) {
-  debugger
   aVoteCount[0].innerHTML = votes.A;
   bVoteCount[0].innerHTML = votes.B;
   cVoteCount[0].innerHTML = votes.C;

@@ -2,12 +2,27 @@ const http = require('http');
 const express = require('express');
 const socketIo = require('socket.io');
 const app = express();
+var bodyParser = require('body-parser')
 var votes = {};
+app.locals.polls = {};
+const generateId = require('./lib/generate-id');
 
 app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function (req, res){
   res.sendFile(__dirname + '/public/views/index.html');
+});
+
+app.get('/poll', function (req, res){
+  res.sendFile(__dirname + '/public/views/poll.html');
+});
+
+app.post('/polls', function(req, res){
+  var id = generateId();
+  
+  res.sendFile(__dirname + '/public/views/polls.html')
 });
 
 app.get('/voter', function (req, res){
