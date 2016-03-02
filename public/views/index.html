@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <link rel="stylesheet" href="/style/app.css" media="screen" title="no title" charset="utf-8">
+    <title>Crowdsource</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="center">
+        <h3>Create a New Poll</h3>
+      </div>
+      <div class="row">
+        <div class="col s6 offset-s3">
+          <div class="new-poll">
+            <form class="new-poll-form" action="index.html" method="post">
+              <label for="name">Name</label>
+              <input type="text" name="name" placeholder="poll name">
+              <label for="description">Name</label>
+              <input type="text" name="description" placeholder="poll description">
+              <label for="answer">Name</label>
+              <input type="text" name="answer-one" placeholder="poll answer one">
+              <label for="answer">Name</label>
+              <input type="text" name="answer-two" placeholder="poll answer two">
+              <input type="button" name="sbumit" value="submit" class="btn blue">
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="links center">
+        <a href="/admin">Admin - </a>
+        <a href="/voter">Voter - </a>
+        <a href="/">Home</a>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/scripts/index.js"></script>
+  </body>
+</html>

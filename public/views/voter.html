@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <link rel="stylesheet" href="/style/app.css" media="screen" title="no title" charset="utf-8">
+    <title>Crowdsource</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="center">
+        <h3 id="prompt">Place your Vote!</h3>
+        <div id="choices">
+          <button class="btn blue">A</button>
+          <button class="btn blue">B</button>
+          <button class="btn blue">C</button>
+          <button class="btn blue">D</button>
+        </div>
+        <div class="row">
+          <div class="col s6 offset-s3">
+            <h5 id="your-vote" class="top-margin">Your Vote: </h5>
+          </div>
+        </div>
+      </div>
+      <div class="links center">
+        <a href="/admin">Admin - </a>
+        <a href="/voter">Voter - </a>
+        <a href="/">Home</a>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/scripts/voter.js"></script>
+  </body>
+</html>
