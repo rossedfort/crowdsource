@@ -1,0 +1,26 @@
+{
+  "name": "crowdsource",
+  "version": "1.0.0",
+  "description": "a polling app using websockets",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rossedfort/crowdsource.git"
+  },
+  "keywords": [
+    "websockets"
+  ],
+  "author": "Ross Edfort",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rossedfort/crowdsource/issues"
+  },
+  "homepage": "https://github.com/rossedfort/crowdsource#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "socket.io": "^1.4.5"
+  }
+}
