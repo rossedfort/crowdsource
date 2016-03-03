@@ -69,7 +69,7 @@ io.on('connection', function (socket) {
   socket.on('message', function (channel, message) {
     if (channel === 'voteCast') {
       votes[socket.id] = message;
-      socket.broadcast.emit('voteCount', countVotes(votes));
+      socket.broadcast.emit('voteCount', countVotes(votes, app.locals.currentPoll));
       socket.emit('voteCount', countVotes(votes));
     }
   });
@@ -81,7 +81,7 @@ io.on('connection', function (socket) {
   });
 });
 
-function countVotes(votes) {
+function countVotes(votes, currentPoll) {
   var voteCount = {
       A: 0,
       B: 0,
