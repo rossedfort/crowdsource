@@ -1,12 +1,13 @@
 const http = require('http');
 const express = require('express');
-var ejs = require('ejs');
+const ejs = require('ejs');
 const socketIo = require('socket.io');
 const app = express();
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
+const generator = require('./lib/generator');
+const postBuilder = require('./lib/post-builder')
 var votes = {};
 app.locals.polls = {};
-const generator = require('./lib/generator');
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -25,7 +26,8 @@ app.post('/polls', function(req, res){
   var voterUrl = generator.generateVoterUrl(req);
   var adminUrl = generator.generateAdminUrl(req);
   var hash = generator.hash();
-  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, hash: hash})
+  var post = postBuilder.buildPost(req.body);
+  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, hash: hash, post: post})
 });
 
 app.get('/voter/:id', function (req, res){
