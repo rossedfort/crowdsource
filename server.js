@@ -17,21 +17,22 @@ app.get('/', function (req, res){
   res.sendFile(__dirname + '/public/views/index.html');
 });
 
-app.get('/poll', function (req, res){
+app.get('/new-poll', function (req, res){
   res.sendFile(__dirname + '/public/views/poll.html');
 });
 
 app.post('/polls', function(req, res){
-  var voterUrl = generator.generateUrl(req);
-  var adminUrl = generator.generateUrl(req);
-  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl})
+  var voterUrl = generator.generateVoterUrl(req);
+  var adminUrl = generator.generateAdminUrl(req);
+  var hash = generator.hash();
+  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, hash: hash})
 });
 
-app.get('/voter', function (req, res){
+app.get('/voter/:id', function (req, res){
   res.sendFile(__dirname + '/public/views/voter.html')
 });
 
-app.get('/admin', function (req, res){
+app.get('/admin/:id', function (req, res){
   res.sendFile(__dirname + '/public/views/admin.html')
 });
 
