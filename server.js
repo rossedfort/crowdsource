@@ -1,13 +1,13 @@
 const http = require('http');
 const express = require('express');
+const Firebase = require("firebase");
 const ejs = require('ejs');
 const socketIo = require('socket.io');
 const app = express();
 const bodyParser = require('body-parser')
 const generator = require('./lib/generator');
-const postBuilder = require('./lib/post-builder')
+const pollBuilder = require('./lib/poll-builder')
 var votes = {};
-app.locals.polls = {};
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -23,19 +23,35 @@ app.get('/new-poll', function (req, res){
 });
 
 app.post('/polls', function(req, res){
+  app.locals.currentPoll = {};
   var voterUrl = generator.generateVoterUrl(req);
   var adminUrl = generator.generateAdminUrl(req);
   var hash = generator.hash();
-  var post = postBuilder.buildPost(req.body);
-  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, hash: hash, post: post})
+  var poll = pollBuilder.buildPoll(hash, req.body);
+  app.locals.currentPoll = poll
+  var uniqueRef = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '');
+  uniqueRef.update({poll});
+  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, hash: hash, poll: poll})
 });
 
 app.get('/voter/:id', function (req, res){
-  res.sendFile(__dirname + '/public/views/voter.html')
+  var pathId = req.originalUrl.split('/')[2]
+  var currentPollId = app.locals.currentPoll.hash
+  if (pathId === currentPollId) {
+    res.render(__dirname + '/public/views/voter.ejs', {poll: app.locals.currentPoll})
+  } else {
+    res.sendFile(__dirname + '/public/views/error.html')
+  }
 });
 
 app.get('/admin/:id', function (req, res){
-  res.sendFile(__dirname + '/public/views/admin.html')
+  var pathId = req.originalUrl.split('/')[2]
+  var currentPollId = app.locals.currentPoll.hash
+  if (pathId === currentPollId) {
+    res.render(__dirname + '/public/views/admin.ejs', {poll: app.locals.currentPoll})
+  } else {
+    res.sendFile(__dirname + '/public/views/error.html')
+  }
 });
 
 const port = process.env.PORT || 3000;
@@ -48,8 +64,6 @@ server.listen(port, function () {
 const io = socketIo(server);
 
 io.on('connection', function (socket) {
-  console.log('A user has connected.', io.engine.clientsCount);
-
   io.sockets.emit('userConnection', io.engine.clientsCount);
 
   socket.on('message', function (channel, message) {
@@ -61,7 +75,6 @@ io.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function () {
-    console.log('A user has disconnected.', io.engine.clientsCount);
     delete votes[socket.id];
     socket.emit('voteCount', countVotes(votes));
     io.sockets.emit('userConnection', io.engine.clientsCount);
@@ -72,8 +85,7 @@ function countVotes(votes) {
   var voteCount = {
       A: 0,
       B: 0,
-      C: 0,
-      D: 0
+      C: 0
   };
     for (var vote in votes) {
       voteCount[votes[vote]]++
