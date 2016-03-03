@@ -11,8 +11,8 @@
         <div class="col s6 offset-s3">
           <h3>name: <%= poll.name %></h3>
           <h5>description: <%= poll.description %></h5>
-          <h3>voter link: </h3><a href="<%= voter %><%= hash %>"><%= voter %><%= hash %></a>
-          <h3>admin link: </h3><a href="<%= admin %><%= hash %>"><%= admin %><%= hash %></a>
+          <h3>voter link: </h3><a href="<%= voter %><%= poll.hash %>"><%= voter %><%= poll.hash %></a>
+          <h3>admin link: </h3><a href="<%= admin %><%= poll.hash %>"><%= admin %><%= poll.hash %></a>
         </div>
       </div>
     </div>
