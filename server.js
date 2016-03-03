@@ -37,8 +37,12 @@ app.get('/voter/:id', function (req, res){
   var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId + '');
 
   ref.on("value", function(snapshot) {
-    res.render(__dirname + '/public/views/voter.ejs', {poll: snapshot.val()})
-  }, function (errorObject) {
+    if (snapshot.val() === null) {
+      res.sendFile(__dirname + '/public/views/error.html')
+    } else {
+      res.render(__dirname + '/public/views/voter.ejs', {poll: snapshot.val()})
+    }
+  }, function () {
     res.sendFile(__dirname + '/public/views/error.html')
   });
 });
@@ -48,8 +52,12 @@ app.get('/admin/:id', function (req, res){
   var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId + '');
 
   ref.on("value", function(snapshot) {
-    res.render(__dirname + '/public/views/admin.ejs', {poll: snapshot.val()})
-  }, function (errorObject) {
+    if (snapshot.val() === null) {
+      res.sendFile(__dirname + '/public/views/error.html')
+    } else {
+      res.render(__dirname + '/public/views/admin.ejs', {poll: snapshot.val()})
+    }
+  }, function () {
     res.sendFile(__dirname + '/public/views/error.html')
   });
 });
