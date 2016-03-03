@@ -11,12 +11,28 @@
         <div class="col s6 offset-s3">
           <h3>name: <%= poll.name %></h3>
           <h5>description: <%= poll.description %></h5>
-          <h3>voter link: </h3><a href="<%= voter %><%= poll.hash %>"><%= voter %><%= poll.hash %></a>
-          <h3>admin link: </h3><a href="<%= admin %><%= poll.hash %>"><%= admin %><%= poll.hash %></a>
+          <div class="row">
+            <div class="col s10 offset-s1 clipboard">
+              <h3>voter link: </h3><input class="input-clip center" value="<%= voter %><%= poll.hash %>" id="voterUrl">
+              <button class="btn-clip" data-clipboard-target="#voterUrl">
+                <img src="https://clipboardjs.com/assets/images/clippy.svg" alt="clippy" />
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s10 offset-s1 clipboard">
+              <h3>admin link: </h3><input class="input-clip center" value="<%= admin %><%= poll.hash %>" id="adminUrl">
+              <button class="btn-clip" data-clipboard-target="#adminUrl">
+                <img src="https://clipboardjs.com/assets/images/clippy.svg" alt="clippy" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.8/clipboard.min.js"></script>
+    <script src="/scripts/polls.js" type="text/javascript"></script>
   </body>
 </html>

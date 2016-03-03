@@ -21,6 +21,7 @@
   "homepage": "https://github.com/rossedfort/crowdsource#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "clipboard": "^1.5.9",
     "crypto": "0.0.3",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
