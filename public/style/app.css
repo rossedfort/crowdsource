@@ -48,3 +48,40 @@ input[type=text]:focus:not([readonly]) + label {
 input[type=password]:focus:not([readonly]) + label {
   color: #2196F3;
 }
+
+input:not([type]) {
+  width: 90%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  height: 32px;
+}
+
+input:not([type]):focus:not([readonly]) {
+  width: 90%;
+  border-bottom: 1px solid #ccc;
+  box-shadow: none;
+}
+
+button:focus {
+  margin: none;
+  background-color: #ccc;
+  outline: none;
+}
+
+.clipboard button {
+  position: absolute;
+  padding: 6px;
+  display: inline;
+  margin: 0px;
+  height: 34px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+}
+
+.btn-clip img {
+  width: 16px;
+}
+
+clipboard input, button {
+  display: inline;
+}
