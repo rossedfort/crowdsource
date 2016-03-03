@@ -1,12 +1,14 @@
 const http = require('http');
 const express = require('express');
+var ejs = require('ejs');
 const socketIo = require('socket.io');
 const app = express();
 var bodyParser = require('body-parser')
 var votes = {};
 app.locals.polls = {};
-const generateId = require('./lib/generate-id');
+const generator = require('./lib/generator');
 
+app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,9 +22,9 @@ app.get('/poll', function (req, res){
 });
 
 app.post('/polls', function(req, res){
-  var id = generateId();
-  
-  res.sendFile(__dirname + '/public/views/polls.html')
+  var voterUrl = generator.generateUrl(req);
+  var adminUrl = generator.generateUrl(req);
+  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl})
 });
 
 app.get('/voter', function (req, res){
