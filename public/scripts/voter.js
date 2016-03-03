@@ -1,6 +1,5 @@
 var socket = io();
 
-var connectionCount = $('#connection-count');
 var buttons = $('button');
 var yourVote = $('#your-vote');
 var prompt = $('#prompt');
