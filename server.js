@@ -1,27 +1,28 @@
+const ejs = require('ejs');
 const http = require('http');
 const express = require('express');
+const parseurl = require('parseurl');
 const Firebase = require("firebase");
-const ejs = require('ejs');
 const socketIo = require('socket.io');
-const session = require('express-session')
 const bodyParser = require('body-parser')
+const session = require('express-session')
 const generator = require('./lib/generator');
 const pollBuilder = require('./lib/poll-builder')
-const parseurl = require('parseurl');
 
 const app = express();
 
-app.locals.votes = {};
 app.set('view engine', 'ejs');
+
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(session({
   secret: generator.hash(),
   resave: false,
   saveUninitialized: true
 }))
+
+app.locals.votes = {};
 
 app.use(function (req, res, next) {
   var views = req.session.views
