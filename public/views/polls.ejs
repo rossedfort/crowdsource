@@ -8,12 +8,14 @@
   <body>
     <div class="container center">
       <div class="row">
-        <div class="col s6 offset-s3">
+        <div class="col s8 offset-s2">
           <h3>name: <%= poll.name %></h3>
           <h5>description: <%= poll.description %></h5>
-          <div class="row">
+          <div class="row small-top-margin">
             <div class="col s10 offset-s1 clipboard">
-              <h3>voter link: </h3><input class="input-clip center" value="<%= voter %><%= poll.hash %>" id="voterUrl">
+              <h5>voter link: </h5>
+              <p>Copy this link and send it out to your participants</p>
+              <input class="input-clip center" value="<%= voter %><%= poll.hash %>" id="voterUrl">
               <button class="btn-clip" data-clipboard-target="#voterUrl">
                 <img src="https://clipboardjs.com/assets/images/clippy.svg" alt="clippy" />
               </button>
@@ -21,7 +23,9 @@
           </div>
           <div class="row">
             <div class="col s10 offset-s1 clipboard">
-              <h3>admin link: </h3><input class="input-clip center" value="<%= admin %><%= poll.hash %>" id="adminUrl">
+              <h5>admin link: </h5>
+              <p>keep this link to view the results of the poll, and reference it later</p>
+              <input class="input-clip center" value="<%= admin %><%= poll.hash %>" id="adminUrl">
               <button class="btn-clip" data-clipboard-target="#adminUrl">
                 <img src="https://clipboardjs.com/assets/images/clippy.svg" alt="clippy" />
               </button>
