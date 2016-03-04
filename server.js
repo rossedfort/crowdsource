@@ -7,8 +7,8 @@ const app = express();
 const bodyParser = require('body-parser')
 const generator = require('./lib/generator');
 const pollBuilder = require('./lib/poll-builder')
-var votes = {};
 
+app.locals.votes = {};
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -72,14 +72,15 @@ server.listen(port, function () {
 const io = socketIo(server);
 
 io.on('connection', function (socket) {
-  socket.on('message', function (channel, message) {
-    votes[socket.id] = message;
-    socket.broadcast.emit(channel, countVotes(votes));
+  sessionHash = generator.hash();
+  socket.emit('session', sessionHash)
+  socket.on('message', function (channel ,message) {
+    app.locals.votes[socket.id] = message;
+    socket.broadcast.emit(channel, countVotes(app.locals.votes));
   });
-
   socket.on('disconnect', function () {
-    delete votes[socket.id];
-    socket.emit('voteCount', countVotes(votes));
+    delete app.locals.votes[socket.id];
+    socket.emit('voteCount', countVotes(app.locals.votes));
   });
 });
 
