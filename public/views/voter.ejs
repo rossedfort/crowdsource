@@ -12,9 +12,9 @@
         <h5>Poll Description: <%= poll.poll.description %></h5>
         <h3 id="prompt">Place your Vote!</h3>
         <div id="choices">
-          <button id="A" class="btn blue"><%= poll.poll.answers[0] %></button>
-          <button id="B" class="btn blue"><%= poll.poll.answers[1] %></button>
-          <button id="C" class="btn blue"><%= poll.poll.answers[2] %></button>
+          <% poll.poll.answers.forEach(function(answer, index){ %>
+          <button id=<%= index %> class="btn blue"><%= answer %></button>
+          <% }) %>
         </div>
         <div class="row">
           <div class="col s6 offset-s3">
