@@ -12,7 +12,6 @@ const pollBuilder = require('./lib/poll-builder')
 const app = express();
 
 app.set('view engine', 'ejs');
-
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -90,8 +89,8 @@ app.get('/admin/:id', function (req, res){
 });
 
 const port = process.env.PORT || 3000;
+const server = http.createServer(app);
 
-const server = http.createServer(app)
 server.listen(port, function () {
   console.log('Listening on port ' + port + '.');
 });
