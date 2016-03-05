@@ -11,7 +11,7 @@
         <h3>Create a New Poll</h3>
       </div>
       <div class="row">
-        <div class="col s6 offset-s3">
+        <div class="col s8 offset-s2">
           <div class="new-poll">
             <form class="new-poll-form" action="/polls" method="post">
               <div class="inputs">
@@ -21,9 +21,19 @@
                 <input type="text" class="answer" name="answer[]" placeholder="poll answer">
                 <input type="text" class="answer" name="answer[]" placeholder="poll answer">
               </div>
-              <input type="submit" id="submit" value="submit" class="btn blue">
-              <a type="button" id="newAnswer" class="btn blue">Add Answer</a>
+              <div class="row">
+                <div class="col s4">
+                  <input type="submit" id="submit" value="submit" class="btn blue">
+                </div>
+                <div class="col s4">
+                  <a type="button" id="removeAnswer" class="btn red">Remove Answer</a>
+                </div>
+                <div class="col s4">
+                  <a type="button" id="newAnswer" class="btn blue">Add Answer</a>
+                </div>
+              </div>
             </form>
+            <div class="alerts center"></div>
           </div>
         </div>
       </div>
