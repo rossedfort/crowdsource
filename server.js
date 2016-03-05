@@ -112,9 +112,12 @@ io.on('connection', function (socket) {
 
 function countVotes(votes) {
   var voteCount = {
-      A: 0,
-      B: 0,
-      C: 0
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0
   };
     for (var vote in votes) {
       voteCount[votes[vote]]++

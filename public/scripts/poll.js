@@ -2,5 +2,9 @@ var newAnswerButton = $('#newAnswer');
 var inputs = $('.inputs');
 
 newAnswerButton.click(function(){
-  inputs.append(`<input type="text" name="answer[]" placeholder="poll answer">`);
-})
+  if ($('.answer').length === 6) {
+    alert('Only 6 answers Allowed')
+  } else {
+    inputs.append(`<input class='answer' type="text" name="answer[]" placeholder="poll answer">`);
+  }
+});
