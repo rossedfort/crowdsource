@@ -90,6 +90,25 @@ button:focus {
   margin-top: 50px;
 }
 
-#newAnswer {
+#submit {
   float: right;
+  margin-top: 25px;
+}
+
+#removeAnswer {
+  width: 200px;
+}
+
+#newAnswer {
+  width: 200px;
+  float: right;
+}
+
+.newPoll {
+  padding-top: 50px;
+}
+
+.new-poll-form {
+  padding: 20px;
+  background-color: #fff;
 }
