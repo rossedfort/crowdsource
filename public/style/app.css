@@ -89,3 +89,7 @@ button:focus {
 .small-top-margin {
   margin-top: 50px;
 }
+
+#newAnswer {
+  float: right;
+}

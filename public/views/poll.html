@@ -14,12 +14,15 @@
         <div class="col s6 offset-s3">
           <div class="new-poll">
             <form class="new-poll-form" action="/polls" method="post">
-              <input type="text" name="name" placeholder="poll name">
-              <input type="text" name="description" placeholder="poll description">
-              <input type="text" name="answer[]" placeholder="poll answer one">
-              <input type="text" name="answer[]" placeholder="poll answer two">
-              <input type="text" name="answer[]" placeholder="poll answer three">
+              <div class="inputs">
+                <input type="text" name="name" placeholder="poll name">
+                <input type="text" name="description" placeholder="poll description">
+                <input type="text" name="answer[]" placeholder="poll answer">
+                <input type="text" name="answer[]" placeholder="poll answer">
+                <input type="text" name="answer[]" placeholder="poll answer">
+              </div>
               <input type="submit" id="submit" value="submit" class="btn blue">
+              <a type="button" id="newAnswer" class="btn blue">Add Answer</a>
             </form>
           </div>
         </div>
@@ -27,5 +30,6 @@
     </div>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/scripts/poll.js" type="text/javascript"></script>
   </body>
 </html>
