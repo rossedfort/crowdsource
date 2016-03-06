@@ -100,17 +100,23 @@ const io = socketIo(server);
 
 io.on('connection', function (socket) {
   sessionHash = generator.hash();
-  socket.on('message', function (channel ,message) {
-    app.locals.votes[socket.id] = message;
-    socket.broadcast.emit(channel, countVotes(app.locals.votes));
+  socket.on('message', function (channel, hash, message, id) {
+    if (channel === 'vote') {
+      app.locals.votes[socket.id] = id;
+      socket.broadcast.emit(channel, countVotes(app.locals.votes, id, message, hash));
+    }
   });
   socket.on('disconnect', function () {
     delete app.locals.votes[socket.id];
-    socket.emit('voteCount', countVotes(app.locals.votes));
+    // socket.emit('voteCount', countVotes(app.locals.votes));
+  });
+  socket.on('savePoll', function(hash){
+
   });
 });
 
-function countVotes(votes) {
+function countVotes(votes, id, message, channel) {
+  var newId = (parseInt(id) - 1);
   var voteCount = {
       1: 0,
       2: 0,
@@ -122,7 +128,10 @@ function countVotes(votes) {
     for (var vote in votes) {
       voteCount[votes[vote]]++
     }
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + channel + '/poll/answers/' + newId);
+    ref.update({ answer: message, count: voteCount[votes[vote]] });
     return voteCount;
 }
+
 
 module.exports = server;

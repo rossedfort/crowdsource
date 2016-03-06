@@ -17,19 +17,20 @@
               <thead>
                 <tr>
                   <% poll.poll.answers.forEach(function(answer){ %>
-                    <td><%= answer %></td>
+                    <td><%= answer.answer %></td>
                   <% }) %>
                 </tr>
               </thead>
               <tbody>
                 <tr class="red-text">
                   <% poll.poll.answers.forEach(function(answer, index){ %>
-                    <td id="<%= index %>">0</td>
+                    <td id="<%= index + 1 %>">0</td>
                   <% }) %>
                 </tr>
               </tbody>
             </table>
           </div>
+          <a class="btn blue small-top-margin" type="button" id="closeAndSavePollButton">Close and save poll</a>
         </div>
       </div>
     </div>

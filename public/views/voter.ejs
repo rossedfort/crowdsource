@@ -13,7 +13,7 @@
         <h3 id="prompt">Place your Vote!</h3>
         <div id="choices">
           <% poll.poll.answers.forEach(function(answer, index){ %>
-          <button id=<%= index %> class="btn blue"><%= answer %></button>
+            <button id=<%= index + 1 %> class="btn blue"><%= answer.answer %></button>
           <% }) %>
         </div>
         <div class="row">
