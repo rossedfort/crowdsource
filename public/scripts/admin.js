@@ -18,4 +18,5 @@ socket.on('vote', function (votes) {
 
 closeAndSavePollButton.click(function(){
   socket.emit('savePoll', location.pathname.split("/")[2]);
+  this.remove();
 });

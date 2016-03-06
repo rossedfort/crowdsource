@@ -38,15 +38,15 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.get('/', function (req, res){
+app.get('/', function (req, res, next){
   res.sendFile(__dirname + '/public/views/index.html');
 });
 
-app.get('/new-poll', function (req, res){
+app.get('/new-poll', function (req, res, next){
   res.sendFile(__dirname + '/public/views/poll.html');
 });
 
-app.post('/polls', function(req, res){
+app.post('/polls', function(req, res, next){
   var voterUrl = generator.generateVoterUrl(req);
   var adminUrl = generator.generateAdminUrl(req);
   var hash = generator.hash();
@@ -65,6 +65,8 @@ app.get('/voter/:id', function (req, res, next){
     ref.on("value", function(snapshot) {
       if (snapshot.val() === null) {
         res.sendFile(__dirname + '/public/views/error.html')
+      } else if (snapshot.val().poll.active === false) {
+        res.sendFile(__dirname + '/public/views/closed.html')
       } else {
         res.render(__dirname + '/public/views/voter.ejs', {poll: snapshot.val()})
       }
@@ -74,7 +76,7 @@ app.get('/voter/:id', function (req, res, next){
   }
 });
 
-app.get('/admin/:id', function (req, res){
+app.get('/admin/:id', function (req, res, next){
   var pathId = req.originalUrl.split('/')[2]
   var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId + '');
 
@@ -108,10 +110,10 @@ io.on('connection', function (socket) {
   });
   socket.on('disconnect', function () {
     delete app.locals.votes[socket.id];
-    // socket.emit('voteCount', countVotes(app.locals.votes));
   });
   socket.on('savePoll', function(hash){
-
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '/poll');
+    ref.update({active: false})
   });
 });
 
