@@ -47,38 +47,43 @@ app.get('/new-poll', function (req, res, next){
 });
 
 app.post('/polls', function(req, res, next){
+  var time = req.body.time * 60000;
   var voterUrl = generator.generateVoterUrl(req);
   var adminUrl = generator.generateAdminUrl(req);
   var hash = generator.hash();
   var poll = pollBuilder.buildPoll(hash, req.body);
-  var uniqueRef = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '');
-  uniqueRef.update({poll});
-  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, poll: poll})
+  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash);
+  ref.update({poll});
+  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, poll: poll});
+  setTimeout(function(){
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '/poll');
+    ref.update({active: false})
+  }, time)
 });
 
 app.get('/voter/:id', function (req, res, next){
-  var pathId = req.originalUrl.split('/')[2]
+  var pathId = req.originalUrl.split('/')[2];
   if (req.session.views['/voter/' + pathId] > 1) {
-    res.sendFile(__dirname + '/public/views/duplicate-vote.html')
+    res.sendFile(__dirname + '/public/views/duplicate-vote.html');
   } else {
-    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId + '');
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId);
     ref.on("value", function(snapshot) {
       if (snapshot.val() === null) {
-        res.sendFile(__dirname + '/public/views/error.html')
+        res.sendFile(__dirname + '/public/views/error.html');
       } else if (snapshot.val().poll.active === false) {
-        res.sendFile(__dirname + '/public/views/closed.html')
+        res.sendFile(__dirname + '/public/views/closed.html');
       } else {
-        res.render(__dirname + '/public/views/voter.ejs', {poll: snapshot.val()})
+        res.render(__dirname + '/public/views/voter.ejs', {poll: snapshot.val()});
       }
     }, function () {
-      res.sendFile(__dirname + '/public/views/error.html')
+      res.sendFile(__dirname + '/public/views/error.html');
     });
   }
 });
 
 app.get('/admin/:id', function (req, res, next){
   var pathId = req.originalUrl.split('/')[2]
-  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId + '');
+  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId);
 
   ref.on("value", function(snapshot) {
     if (snapshot.val() === null) {
