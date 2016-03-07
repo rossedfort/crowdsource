@@ -37,4 +37,14 @@ describe('Server', () => {
       });
     });
   });
+
+  describe('GET /new-poll', () => {
+    it('should return a 200', (done) => {
+      request.get('http://localhost:3000/new-poll', (error, response) => {
+        if (error) { done(error); }
+        assert.equal(response.statusCode, 200);
+        done();
+      });
+    });
+  });
 });
