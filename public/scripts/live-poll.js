@@ -23,7 +23,6 @@ var eVoteCount = $('#td-5');
 var fVoteCount = $('#td-6');
 
 socket.on('vote', function (votes) {
-  console.log('woop');
   aVoteCount[0].innerHTML = votes[1];
   bVoteCount[0].innerHTML = votes[2];
   cVoteCount[0].innerHTML = votes[3];
