@@ -2,7 +2,7 @@ const ejs = require('ejs');
 const http = require('http');
 const express = require('express');
 const parseurl = require('parseurl');
-const Firebase = require("firebase");
+const Firebase = require('firebase');
 const socketIo = require('socket.io');
 const bodyParser = require('body-parser')
 const session = require('express-session')
@@ -41,23 +41,36 @@ app.get('/', function (req, res, next){
   res.sendFile(__dirname + '/public/views/index.html');
 });
 
-app.get('/new-poll', function (req, res, next){
-  res.sendFile(__dirname + '/public/views/poll.html');
+app.get('/new-admin-poll', function (req, res, next){
+  res.sendFile(__dirname + '/public/views/admin-poll.html');
+});
+
+app.get('/new-live-poll', function(req, res, next){
+  res.sendFile(__dirname + '/public/views/live-poll.html')
 });
 
 app.post('/polls', function(req, res, next){
-  var time = req.body.time * 60000;
-  var voterUrl = generator.generateVoterUrl(req);
-  var adminUrl = generator.generateAdminUrl(req);
-  var hash = generator.hash();
-  var poll = pollBuilder.buildPoll(hash, req.body);
-  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash);
-  ref.update({poll});
-  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, poll: poll});
-  setTimeout(function(){
-    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '/poll');
-    ref.update({active: false})
-  }, time)
+  if (req.body.type === 'admin') {
+    var voterUrl = generator.generateVoterUrl(req);
+    var adminUrl = generator.generateAdminUrl(req);
+    var hash = generator.hash();
+    var poll = pollBuilder.buildPoll(hash, req.body);
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash);
+    ref.update({poll});
+    res.render(__dirname + '/public/views/admin-poll.ejs', {voter: voterUrl, admin: adminUrl, poll: poll});
+  } else {
+    var time = req.body.time * 60000;
+    var url = generator.generatePollUrl(req);
+    var hash = generator.hash();
+    var poll = pollBuilder.buildPoll(hash, req.body);
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash);
+    ref.update({poll});
+    res.render(__dirname + '/public/views/live-poll.ejs', {url: url, poll: poll});
+    setTimeout(function(){
+      var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '/poll');
+      ref.update({active: false})
+    }, time)
+  }
 });
 
 app.get('/voter/:id', function (req, res, next){
@@ -95,6 +108,23 @@ app.get('/admin/:id', function (req, res, next){
   });
 });
 
+app.get('/poll/:id', function(req, res, next){
+  var pathId = req.originalUrl.split('/')[2]
+  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId);
+
+  ref.on("value", function(snapshot) {
+    if (snapshot.val() === null) {
+      res.sendFile(__dirname + '/public/views/error.html')
+    } else if (snapshot.val().poll.active === false) {
+      res.sendFile(__dirname + '/public/views/closed.html');
+    } else {
+      res.render(__dirname + '/public/views/poll.ejs', {poll: snapshot.val()})
+    }
+  }, function () {
+    res.sendFile(__dirname + '/public/views/error.html')
+  });
+});
+
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 
@@ -107,10 +137,8 @@ const io = socketIo(server);
 io.on('connection', function (socket) {
   sessionHash = generator.hash();
   socket.on('message', function (channel, hash, message, id) {
-    if (channel === 'vote') {
-      app.locals.votes[socket.id] = id;
-      socket.broadcast.emit(channel, countVotes(app.locals.votes, id, message, hash));
-    }
+    app.locals.votes[socket.id] = id;
+    socket.broadcast.emit('vote', countVotes(app.locals.votes, id, message, hash));
   });
   socket.on('disconnect', function () {
     delete app.locals.votes[socket.id];

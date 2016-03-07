@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <link rel="stylesheet" href="/style/app.css" media="screen" title="no title" charset="utf-8">
+    <title>Crowdsource</title>
+  </head>
+  <body>
+    <div class="container center">
+      <div class="row">
+        <div class="col s8 offset-s2">
+          <h3>name: <%= poll.name %></h3>
+          <h5>description: <%= poll.description %></h5>
+          <div class="row small-top-margin">
+            <div class="col s10 offset-s1 clipboard">
+              <h5>Link: </h5>
+              <p>Copy this link and send it out to your participants</p>
+              <input class="input-clip center" value="<%= url %><%= poll.hash %>" id="voterUrl">
+              <button class="btn-clip" data-clipboard-target="#voterUrl">
+                <img src="https://clipboardjs.com/assets/images/clippy.svg" alt="clippy" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.8/clipboard.min.js"></script>
+    <script src="/scripts/polls.js" type="text/javascript"></script>
+  </body>
+</html>
