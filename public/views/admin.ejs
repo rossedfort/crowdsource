@@ -16,20 +16,21 @@
             <table class="bordered highlight centered center">
               <thead>
                 <tr>
-                  <td><%= poll.poll.answers[0] %></td>
-                  <td><%= poll.poll.answers[1] %></td>
-                  <td><%= poll.poll.answers[2] %></td>
+                  <% poll.poll.answers.forEach(function(answer){ %>
+                    <td><%= answer.answer %></td>
+                  <% }) %>
                 </tr>
               </thead>
               <tbody>
                 <tr class="red-text">
-                  <td id="a">0</td>
-                  <td id="b">0</td>
-                  <td id="c">0</td>
+                  <% poll.poll.answers.forEach(function(answer, index){ %>
+                    <td id="<%= index + 1 %>"><%= answer.count %></td>
+                  <% }) %>
                 </tr>
               </tbody>
             </table>
           </div>
+          <a class="btn blue small-top-margin" type="button" id="closeAndSavePollButton">Close and save poll</a>
         </div>
       </div>
     </div>

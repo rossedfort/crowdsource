@@ -37,45 +37,52 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.get('/', function (req, res){
+app.get('/', function (req, res, next){
   res.sendFile(__dirname + '/public/views/index.html');
 });
 
-app.get('/new-poll', function (req, res){
+app.get('/new-poll', function (req, res, next){
   res.sendFile(__dirname + '/public/views/poll.html');
 });
 
-app.post('/polls', function(req, res){
+app.post('/polls', function(req, res, next){
+  var time = req.body.time * 60000;
   var voterUrl = generator.generateVoterUrl(req);
   var adminUrl = generator.generateAdminUrl(req);
   var hash = generator.hash();
   var poll = pollBuilder.buildPoll(hash, req.body);
-  var uniqueRef = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '');
-  uniqueRef.update({poll});
-  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, poll: poll})
+  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash);
+  ref.update({poll});
+  res.render(__dirname + '/public/views/polls.ejs', {voter: voterUrl, admin: adminUrl, poll: poll});
+  setTimeout(function(){
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '/poll');
+    ref.update({active: false})
+  }, time)
 });
 
 app.get('/voter/:id', function (req, res, next){
-  var pathId = req.originalUrl.split('/')[2]
+  var pathId = req.originalUrl.split('/')[2];
   if (req.session.views['/voter/' + pathId] > 1) {
-    res.sendFile(__dirname + '/public/views/duplicate-vote.html')
+    res.sendFile(__dirname + '/public/views/duplicate-vote.html');
   } else {
-    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId + '');
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId);
     ref.on("value", function(snapshot) {
       if (snapshot.val() === null) {
-        res.sendFile(__dirname + '/public/views/error.html')
+        res.sendFile(__dirname + '/public/views/error.html');
+      } else if (snapshot.val().poll.active === false) {
+        res.sendFile(__dirname + '/public/views/closed.html');
       } else {
-        res.render(__dirname + '/public/views/voter.ejs', {poll: snapshot.val()})
+        res.render(__dirname + '/public/views/voter.ejs', {poll: snapshot.val()});
       }
     }, function () {
-      res.sendFile(__dirname + '/public/views/error.html')
+      res.sendFile(__dirname + '/public/views/error.html');
     });
   }
 });
 
-app.get('/admin/:id', function (req, res){
+app.get('/admin/:id', function (req, res, next){
   var pathId = req.originalUrl.split('/')[2]
-  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId + '');
+  var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + pathId);
 
   ref.on("value", function(snapshot) {
     if (snapshot.val() === null) {
@@ -99,26 +106,38 @@ const io = socketIo(server);
 
 io.on('connection', function (socket) {
   sessionHash = generator.hash();
-  socket.on('message', function (channel ,message) {
-    app.locals.votes[socket.id] = message;
-    socket.broadcast.emit(channel, countVotes(app.locals.votes));
+  socket.on('message', function (channel, hash, message, id) {
+    if (channel === 'vote') {
+      app.locals.votes[socket.id] = id;
+      socket.broadcast.emit(channel, countVotes(app.locals.votes, id, message, hash));
+    }
   });
   socket.on('disconnect', function () {
     delete app.locals.votes[socket.id];
-    socket.emit('voteCount', countVotes(app.locals.votes));
+  });
+  socket.on('savePoll', function(hash){
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + hash + '/poll');
+    ref.update({active: false})
   });
 });
 
-function countVotes(votes) {
+function countVotes(votes, id, message, channel) {
+  var newId = (parseInt(id) - 1);
   var voteCount = {
-      A: 0,
-      B: 0,
-      C: 0
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0
   };
     for (var vote in votes) {
       voteCount[votes[vote]]++
     }
+    var ref = new Firebase('https://burning-heat-1406.firebaseio.com/' + channel + '/poll/answers/' + newId);
+    ref.update({ answer: message, count: voteCount[votes[vote]] });
     return voteCount;
 }
+
 
 module.exports = server;
